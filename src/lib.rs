@@ -11,12 +11,18 @@ struct Minesweeper {
 }
 
 impl Minesweeper {
-    pub fn new(width: usize, height: usize) -> Minesweeper {
+    pub fn new(width: usize, height: usize, mine_count: usize) -> Minesweeper {
         Minesweeper {
             width,
             height,
             open_fields: HashSet::new(),
-            mines: HashSet::new(),
+            mines: {
+                let mines = HashSet::new();
+
+
+
+                mines
+            },
             flagged_fields: HashSet::new(),
         }
     }
