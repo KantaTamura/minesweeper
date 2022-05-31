@@ -5,6 +5,7 @@ use random::random_range;
 
 type Position = (usize, usize);
 
+#[derive(Debug)]
 struct Minesweeper {
     width: usize,
     height: usize,
@@ -30,5 +31,17 @@ impl Minesweeper {
             },
             flagged_fields: HashSet::new(),
         }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::Minesweeper;
+
+    #[test]
+    fn test() {
+        let ms = Minesweeper::new(10, 10, 5);
+
+        println!("{:?}", ms);
     }
 }
