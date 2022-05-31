@@ -1,6 +1,7 @@
 mod random;
 
 use std::collections::HashSet;
+use random::random_range;
 
 type Position = (usize, usize);
 
@@ -19,9 +20,11 @@ impl Minesweeper {
             height,
             open_fields: HashSet::new(),
             mines: {
-                let mines = HashSet::new();
+                let mut mines = HashSet::new();
 
-
+                while mines.len() < mine_count {
+                    mines.insert((random_range(0, width), random_range(0, height)));
+                }
 
                 mines
             },
