@@ -1,3 +1,5 @@
+mod random;
+
 use std::collections::HashSet;
 
 type Position = (usize, usize);
