@@ -5,6 +5,11 @@ use random::random_range;
 
 pub type Position = (usize, usize);
 
+pub enum OpenResult {
+    Mine,
+    NoMine(u8)
+}
+
 #[derive(Debug)]
 pub struct Minesweeper {
     width: usize,
@@ -30,6 +35,18 @@ impl Minesweeper {
                 mines
             },
             flagged_fields: HashSet::new(),
+        }
+    }
+
+    pub fn open(&mut self, position: Position) -> OpenResult {
+        self.open_fields.insert(position);
+
+        let is_mine = self.mines.contains(&position);
+
+        if is_mine {
+            OpenResult::Mine
+        } else {
+            OpenResult::NoMine(0)
         }
     }
 }
