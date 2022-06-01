@@ -93,8 +93,8 @@ mod test {
 
     #[test]
     fn test() {
-        let ms = Minesweeper::new(10, 10, 5);
-
-        println!("{:?}", ms);
+        let mut ms = Minesweeper::new(10, 10, 5);
+        ms.open((5, 5));
+        println!("{}", ms);
     }
 }
