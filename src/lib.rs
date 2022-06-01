@@ -38,7 +38,7 @@ impl Minesweeper {
         }
     }
 
-    pub fn neighbors(&self, (x, y): Position) -> impl Iterator<Item = Position> {
+    pub fn iter_neighbors(&self, (x, y): Position) -> impl Iterator<Item = Position> {
         let width = self.width;
         let height = self.height;
         (x.max(1) - 1 ..= (x + 1).min(width - 1))
