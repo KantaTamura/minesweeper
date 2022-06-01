@@ -1,13 +1,13 @@
 mod random;
 
-use std::collections::HashSet;
 use random::random_range;
+use std::collections::HashSet;
 
 pub type Position = (usize, usize);
 
 pub enum OpenResult {
     Mine,
-    NoMine(u8)
+    NoMine(u8),
 }
 
 #[derive(Debug)]
@@ -41,9 +41,15 @@ impl Minesweeper {
     pub fn iter_neighbors(&self, (x, y): Position) -> impl Iterator<Item = Position> {
         let width = self.width;
         let height = self.height;
-        (x.max(1) - 1 ..= (x + 1).min(width - 1))
-            .flat_map(move |i| (y.max(1) - 1 ..= (y + 1).min(height - 1)).map(move |j| (i, j)))
+        (x.max(1) - 1..=(x + 1).min(width - 1))
+            .flat_map(move |i| (y.max(1) - 1..=(y + 1).min(height - 1)).map(move |j| (i, j)))
             .filter(move |&pos| pos != (x, y))
+    }
+
+    pub fn neighboring_mines(&self, pos: Position) -> u8 {
+        self.iter_neighbors(pos)
+            .filter(|pos| self.mines.contains(pos))
+            .count() as u8
     }
 
     pub fn open(&mut self, position: Position) -> OpenResult {
