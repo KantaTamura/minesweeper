@@ -1,7 +1,10 @@
 mod random;
 
 use random::random_range;
-use std::{collections::HashSet, fmt::{Display, Write}};
+use std::{
+    collections::HashSet,
+    fmt::{Display, Write},
+};
 
 pub type Position = (usize, usize);
 
@@ -26,7 +29,11 @@ impl Display for Minesweeper {
                 let pos = (x, y);
 
                 if !self.open_fields.contains(&pos) {
-                    f.write_str("🟪 ")?;
+                    if self.flagged_fields.contains(&pos) {
+                        f.write_str("🎈 ")?;
+                    } else {
+                        f.write_str("🟪 ")?;
+                    }
                 } else if self.mines.contains(&pos) {
                     f.write_str("🎇 ")?;
                 } else {
@@ -74,15 +81,31 @@ impl Minesweeper {
             .count() as u8
     }
 
-    pub fn open(&mut self, position: Position) -> OpenResult {
+    pub fn open(&mut self, position: Position) -> Option<OpenResult> {
+        if self.flagged_fields.contains(&position) {
+            return None;
+        }
+
         self.open_fields.insert(position);
 
         let is_mine = self.mines.contains(&position);
 
         if is_mine {
-            OpenResult::Mine
+            Some(OpenResult::Mine)
         } else {
-            OpenResult::NoMine(0)
+            Some(OpenResult::NoMine(self.neighboring_mines(position)))
+        }
+    }
+
+    pub fn toggle_flag(&mut self, pos: Position) {
+        if self.open_fields.contains(&pos) {
+            return;
+        }
+
+        if self.flagged_fields.contains(&pos) {
+            self.flagged_fields.remove(&pos);
+        } else {
+            self.flagged_fields.insert(pos);
         }
     }
 }
@@ -95,6 +118,8 @@ mod test {
     fn test() {
         let mut ms = Minesweeper::new(10, 10, 5);
         ms.open((5, 5));
+        ms.toggle_flag((6, 6));
+        ms.open((6, 6));
         println!("{}", ms);
     }
 }
