@@ -38,10 +38,12 @@ impl Minesweeper {
         }
     }
 
-    pub fn neighbors(&self, (x, y): Position) -> Vec<Position> {
-        (x.max(1) - 1 ..= (x + 1).min(self.width - 1))
-            .flat_map(|i| (y.max(1) - 1 ..= (y + 1).min(self.height - 1)).map(move |j| (i, j)))
-            .collect()
+    pub fn neighbors(&self, (x, y): Position) -> impl Iterator<Item = Position> {
+        let width = self.width;
+        let height = self.height;
+        (x.max(1) - 1 ..= (x + 1).min(width - 1))
+            .flat_map(move |i| (y.max(1) - 1 ..= (y + 1).min(height - 1)).map(move |j| (i, j)))
+            .filter(move |&pos| pos != (x, y))
     }
 
     pub fn open(&mut self, position: Position) -> OpenResult {
@@ -66,19 +68,5 @@ mod test {
         let ms = Minesweeper::new(10, 10, 5);
 
         println!("{:?}", ms);
-    }
-
-    #[test]
-    fn neighbors_test() {
-        let ms = Minesweeper::new(10, 10, 5);
-        let test_case_position: Vec<(usize, usize)> = (0 .. 11).flat_map(|i| (0 .. 11).map(move |j| (i, j))).collect();
-
-        println!("{:?}", ms);
-
-        for p in test_case_position {
-            let buf = ms.neighbors(p);
-            println!("{:?}", p);
-            println!("{:?}", buf);
-        }
     }
 }
