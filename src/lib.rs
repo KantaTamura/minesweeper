@@ -38,6 +38,12 @@ impl Minesweeper {
         }
     }
 
+    pub fn neighbors(&self, (x, y): Position) -> Vec<Position> {
+        (x - 1 ..= x + 1)
+            .flat_map(|i| (y - 1 ..= y + 1).map(move |j| (i, j)))
+            .collect()
+    }
+
     pub fn open(&mut self, position: Position) -> OpenResult {
         self.open_fields.insert(position);
 
