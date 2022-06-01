@@ -1,7 +1,7 @@
 mod random;
 
 use random::random_range;
-use std::collections::HashSet;
+use std::{collections::HashSet, fmt::{Display, Write}};
 
 pub type Position = (usize, usize);
 
@@ -17,6 +17,28 @@ pub struct Minesweeper {
     open_fields: HashSet<Position>,
     mines: HashSet<Position>,
     flagged_fields: HashSet<Position>,
+}
+
+impl Display for Minesweeper {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let pos = (x, y);
+
+                if !self.open_fields.contains(&pos) {
+                    f.write_str("🟪 ")?;
+                } else if self.mines.contains(&pos) {
+                    f.write_str("🎇 ")?;
+                } else {
+                    write!(f, "{0: ^2} ", self.neighboring_mines(pos))?;
+                }
+            }
+
+            f.write_char('\n')?;
+        }
+
+        Ok(())
+    }
 }
 
 impl Minesweeper {
